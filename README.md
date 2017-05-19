@@ -1,10 +1,7 @@
 ## Dockerizing Flask With Compose and Machine - From Localhost to the Cloud
 
-Featuring:
-
-- Docker v1.9.0
-- Docker Compose v1.5.0
-- Docker Machine v0.5.0
+Forked from:
+https://github.com/realpython/orchestrating-docker
 
 **Check out the awesome blog post here > https://realpython.com/blog/python/dockerizing-flask-with-compose-and-machine-from-localhost-to-the-cloud/**
 

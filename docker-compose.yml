@@ -1,35 +1,45 @@
-web:
-  restart: always
-  build: ./web
-  expose:
-    - "8000"
-  links:
-    - postgres:postgres
-  volumes:
-    - /usr/src/app/static
-  env_file: .env
-  command: /usr/local/bin/gunicorn -w 2 -b :8000 app:app
+version: '2'
 
-nginx:
-  restart: always
-  build: ./nginx/
-  ports:
-    - "80:80"
-  volumes:
-    - /www/static
-  volumes_from:
-    - web
-  links:
-    - web:web
+services:
+  web:
+    restart: always
+    image: imcallis/tdf-flask:latest
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    links:
+      - postgres:postgres
+    volumes:
+      - /usr/src/app/static
+    env_file: .env
+    command: /usr/local/bin/gunicorn -w 2 -b :8000 app:app
 
-data:
-  image: postgres:latest
-  volumes:
-    - /var/lib/postgresql
-  command: "true"
 
-postgres:
-  restart: always
-  image: postgres:latest
-  volumes_from:
-    - data
+  jupyter:
+    restart: always
+    image: imcallis/docker-jupyter:latest
+    expose:
+      - "8888"
+    ports:
+      - "8888:8888"
+    links:
+      - postgres:postgres
+    volumes:
+      - /Users/ianmcallister/Tooling/mortgage/notebooks:/home/scientist/work
+    command: start-notebook.sh --NotebookApp.password='sha1:f872a59d09ee:476068942710d7d7fb613ae0d269b4516222997d'
+
+
+  data:
+    restart: "no"
+    image: postgres:latest
+    volumes:
+      - "/Users/ianmcallister/db/postgres:/var/lib/postgresql/"
+    command: "true"
+
+  postgres:
+    restart: always
+    image: postgres:latest
+    volumes_from:
+      - data
+    
